@@ -739,3 +739,12 @@ https://helm.sh -> Quickstart guide -> Install from script
 * `helm install stable/nginx-ingress --name my-nginx --set rbac.create=true`
   -> go to workloads and check for ingress-controller and default-backend
   -> got to services tab and check the ip addresses
+
+# Next push
+
+- Create branch
+- push branch -> create pull request -> let it build successfully -> merge pull request
+
+# HTTPS SSL certificate
+
+- install certmanager using helm
