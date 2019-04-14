@@ -30,5 +30,6 @@ Temporary Items
 .apdisk
 
 multi-k8s-237612-a20c749aef7f.json
+service-account.json
 
 # End of https://www.gitignore.io/api/macos
