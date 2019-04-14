@@ -552,24 +552,26 @@ ports: - containerPort: 3000
 
 - `kubectl create secret generic <secret_name> --from-literal key=value`
 
-* types of secret
+kubectl create secret generic pgpassword --from-literal PGPASSWORD=remyremy
+
+- types of secret
 
   - generic/docker-registry/tls
 
   sample command
   `kubectl create secret generic pgpassword --from-literal PGPASSWORD=password123`
 
-- `minikube ip` - to type in the browser
+* `minikube ip` - to type in the browser
 
-* WHAT IS KUBERNETES?
+- WHAT IS KUBERNETES?
   - a system to deploy containerized applications
   - Nodes are individual machines(vms) that run containers
   - Masters are machines with a set of progras to manage nodes
   - To deploy something we update the desired state of the master with a config file.
 
-- Imperative Deployments
+* Imperative Deployments
   - Do exactly these steps to arrive at this container setup.
-- Declarative Deployments
+* Declarative Deployments
   - Our container setup should look like this, make it happen.
 
 # LIMITATIONS IN CONFIG UPDATES
@@ -688,3 +690,52 @@ use `---` at the end of one config
 - travis login
 - using github credentials
 - travis encrypt-file service-account.json -r abhimanyu24/multi-k8s
+
+## ADD THIS IN .travis.yml
+
+```
+env:
+  global:
+    - SHA=$(git rev-parse HEAD)
+    - CLOUDSDK_CORE_DISABLE_PROMPTS=1
+```
+
+- get git_sha by `git rev-parse HEAD`
+
+* Run these commands on google cloud console
+  - `gcloud config set project multi-k8s-237612`
+  - `gcloud config set compute/zone us-central1-a`
+  - `gcloud container clusters get-credentials standard-cluster-1`
+  - `kubectl create secret generic pgpassword --from-literal PGPASSWORD=<password>`
+
+# INSTALL HELM
+
+https://helm.sh -> Quickstart guide -> Install from script
+
+## PASTE the below in google cloud console
+
+- `curl https://raw.githubusercontent.com/helm/helm/master/scripts/get > get_helm.sh`
+- `chmod 700 get_helm.sh`
+- `./get_helm.sh`
+- DO NOT RUN `helm init` yet
+- Need to allow Tiller to change config/settings inside our cluster
+
+* ClusterRoleBinding(authorizes an account to make changes throughout the cluster)/RoleBinding(authorizes an account to do a certain set of actions in a single namespace)
+
+- Need to create a service account and bind it with ClusterRoleBinding/RoleBinding
+
+# Assigning Tiller a Service account
+
+- `kubectl create serviceaccount --namespace kube-system tiller`
+- `kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller`
+
+- init helm now - `helm init --service-account tiller --upgrade`
+
+# INGRESS NGINX WITH HELM
+
+- from nginx-ingress documentation
+- If the kubernetes cluster has RBAC enabled, then run:
+
+* `helm install stable/nginx-ingress --name my-nginx --set rbac.create=true`
+  -> go to workloads and check for ingress-controller and default-backend
+  -> got to services tab and check the ip addresses
