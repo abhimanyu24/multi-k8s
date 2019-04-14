@@ -543,6 +543,8 @@ ports: - containerPort: 3000
 * `kubectl get pvc`
 * `kubectl get storageclass`
 * `kubectl get secrets`
+* `kubectl get certificates`
+* `kubectl describe certificates`
 * `kubectl describe <object type> <object name>`
 * `kubectl delete -f <config file>` - delete a running object
 * `kubectl set image <object_type>/<object_name> <container_name> = <new image to use>`
@@ -748,3 +750,16 @@ https://helm.sh -> Quickstart guide -> Install from script
 # HTTPS SSL certificate
 
 - install certmanager using helm
+-
+
+### NOTE
+
+- first create issuer.yaml and certificate.yaml -> deploy -> add below in ingress-service.yaml in metadata key -> deploy again
+
+```
+annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    certmanager.k8s.io/cluster-issuer: 'letsencrypt-prod'
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+```
