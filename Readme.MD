@@ -682,3 +682,9 @@ use `---` at the end of one config
   - nginx.ingress.kubernetes.io/rewrite-target: / - will remove /api from the request
 
 # AWS vs Google Cloud
+
+# deploying to google cloud
+
+- travis login
+- using github credentials
+- travis encrypt-file service-account.json -r abhimanyu24/multi-k8s
